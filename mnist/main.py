@@ -6,6 +6,7 @@ import torch.nn.functional as F
 import torch.optim as optim
 from torchvision import datasets, transforms
 from torch.optim.lr_scheduler import StepLR
+from ThreadDataLoader import ThreadDataLoader
 
 
 class Net(nn.Module):
@@ -117,8 +118,8 @@ def main():
                        transform=transform)
     dataset2 = datasets.MNIST('../data', train=False,
                        transform=transform)
-    train_loader = torch.utils.data.DataLoader(dataset1,**train_kwargs)
-    test_loader = torch.utils.data.DataLoader(dataset2, **test_kwargs)
+    train_loader = ThreadDataLoader(dataset1, **train_kwargs)
+    test_loader = ThreadDataLoader(dataset2, **test_kwargs)
 
     model = Net().to(device)
     optimizer = optim.Adadelta(model.parameters(), lr=args.lr)
